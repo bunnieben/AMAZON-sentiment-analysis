@@ -1,0 +1,35 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from transformers import pipeline
+from textblob import TextBlob
+
+# Load datase
+df = pd.read_csv("C:/Users/zombi/Desktop/github projext/AMAZON-sentiment-analysis/amazon.csv")
+print(df.head())
+
+
+print(df.info()) 
+print(df.isnull().sum())
+
+
+def analyze_sentiment(text):
+    analysis = TextBlob(text)
+    polarity = analysis.sentiment.polarity
+    if polarity > 0:
+        return "Positive"
+    elif polarity == 0:
+        return "Neutral"
+    else:
+        return "Negative"
+
+df["Sentiment"] = df["review_content"].apply(analyze_sentiment)
+print(df.head())
+
+sentiment_counts = df["Sentiment"].value_counts()
+print(sentiment_counts)
+
+sentiment_counts.plot(kind="bar", color=["green", "gray", "red"])
+plt.title("Sentiment Analysis Results")
+plt.xlabel("Sentiment")
+plt.ylabel("Count")
+plt.show()
